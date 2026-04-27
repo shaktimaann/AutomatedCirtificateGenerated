@@ -1,183 +1,228 @@
 # Automated Certificate Generation
 
-A Python-based application that automatically generates certificates from Excel data or structured data sources. This tool streamlines the process of creating personalized certificates in bulk by reading participant/recipient information from Excel files.
+A Python-based application that automatically generates personalized certificates from Excel data. This tool streamlines bulk certificate creation with customizable templates, dynamic content, and automatic signature integration.
 
 ## 🎯 Features
 
-- **Bulk Certificate Generation** - Generate multiple certificates automatically from a single data source
-- **Excel Data Support** - Read recipient data from Excel (.xlsx, .xls) files
-- **Customizable Templates** - Create and customize certificate templates to match your requirements
-- **Data-Driven** - Personalize certificates with data fields like names, dates, course names, etc.
-- **Batch Processing** - Efficiently process large datasets
-- **Multiple Output Formats** - Generate certificates in various formats (PDF, PNG, etc.)
+- ✅ **Bulk Certificate Generation** - Generate multiple certificates in seconds
+- ✅ **Excel Data Integration** - Read recipient data from Excel (.xlsx) files
+- ✅ **Customizable Templates** - Use your own certificate template images
+- ✅ **Dynamic Content** - Auto-generate certificate text based on achievement type
+- ✅ **Signature Support** - Automatically embed signatures from HOD and Principal
+- ✅ **Robust Error Handling** - Detailed validation and helpful error messages
+- ✅ **Smart Font Fallback** - Works even if system fonts are unavailable
 
 ## 📋 Prerequisites
 
 - Python 3.7 or higher
 - pip (Python package manager)
 
-## 🚀 Installation
+## 🚀 Quick Start
 
-1. Clone the repository:
+1. **Clone the repository:**
 ```bash
 git clone https://github.com/shaktimaann/AutomatedCirtificateGenerated.git
 cd AutomatedCirtificateGenerated
 ```
 
-2. Install required dependencies:
+2. **Install dependencies:**
 ```bash
 pip install -r requirements.txt
 ```
 
-## 💡 Usage
+3. **Prepare your data:**
+   - Create an Excel file with student information
+   - Add signature images for HOD and Principal
 
-### Basic Usage
-
-1. **Prepare Your Data**
-   - Create an Excel file with recipient information
-   - Columns should include data fields like: Name, Date, Course, etc.
-
-2. **Configure Your Certificate Template**
-   - Set up your certificate template with placeholders for dynamic data
-   - Define field mappings between Excel columns and template placeholders
-
-3. **Run the Generator**
+4. **Run the generator:**
 ```bash
-python generate_certificates.py --input data.xlsx --output certificates/
-```
-
-### Example
-
-```python
-from certificate_generator import CertificateGenerator
-
-# Initialize generator
-generator = CertificateGenerator(
-    template_path='template.png',
-    data_file='recipients.xlsx'
-)
-
-# Generate certificates
-generator.generate_all(output_directory='./output/')
+python autocirtificate.py
 ```
 
 ## 📁 Project Structure
 
 ```
 AutomatedCirtificateGenerated/
-├── README.md
-├── requirements.txt
-├── certificate_generator.py
-├── templates/
-│   └── certificate_template.png
-├── data/
-│   └── recipients.xlsx
-└── output/
-    └── (generated certificates)
+├── README.md                    # This file
+├── requirements.txt             # Python dependencies
+├── autocirtificate.py           # Main certificate generator
+├── StudentData.xlsx             # Student data (template provided)
+├── template_C1.jpg              # Certificate template image
+├── certificates/                # Output folder (auto-created)
+├── hod_signatures/              # HOD signature images
+└── principal_signatures/        # Principal signature images
 ```
-
-## 🔧 Configuration
-
-Customize the following in your configuration:
-
-- **Template Path**: Location of your certificate template image
-- **Data Source**: Excel file path with recipient information
-- **Output Directory**: Where to save generated certificates
-- **Field Mappings**: Map Excel columns to template placeholders
-- **Output Format**: Choose PDF, PNG, or other formats
-
-## 📦 Dependencies
-
-Key libraries used in this project:
-
-- `openpyxl` - For reading Excel files
-- `Pillow` - For image manipulation and certificate generation
-- `reportlab` - For PDF generation (optional)
-
-See `requirements.txt` for the complete list.
 
 ## 📝 Excel Data Format
 
-Your Excel file should follow this structure:
+Your `StudentData.xlsx` file should have these columns:
 
-| Name | Email | Course | Date | ID |
-|------|-------|--------|------|-----|
-| John Doe | john@example.com | Python Basics | 2026-04-27 | 001 |
-| Jane Smith | jane@example.com | Web Development | 2026-04-27 | 002 |
+| Student Name | Course/Achievement/Event | HoD Name | HoE name |
+|---|---|---|---|
+| John Doe | Python Basics | Dr. Smith | Principal Johnson |
+| Jane Smith | Web Development | Dr. Brown | Principal Johnson |
+| Alex Kumar | Competition Winner | Dr. Davis | Principal Johnson |
 
-## 🎨 Customization
+**Column Names** (must match exactly):
+- `Student Name` - Name of the student
+- `Course/Achievement/Event` - Course name or event (used for content generation)
+- `HoD Name` - Head of Department name
+- `HoE name` - Head of Education / Principal name
 
-To customize your certificates:
+## 🔧 Achievement Types
 
-1. Edit the certificate template image
-2. Update field placeholders in the template
-3. Modify the field mapping configuration
-4. Adjust font, size, and positioning as needed
+The script automatically generates different certificate messages based on the achievement type:
 
-## 🚦 Getting Started
+| Type | Example | Message |
+|------|---------|---------|
+| **Completion** | Leave blank or type "completion" | Recognizes successful course completion |
+| **Participation** | Type "participation" | Appreciates active event participation |
+| **Winner** | Type "winner" | Honors competition victory |
+| **Generic** | Any other value | Generic achievement recognition |
 
-1. Fork or clone this repository
-2. Prepare your certificate template
-3. Create an Excel file with recipient data
-4. Configure the generator settings
-5. Run the application to generate certificates
+## 🖼️ Signature Image Setup
 
-## 📌 Example Workflow
+1. **Prepare signature images** (PNG format):
+   - Save as `HoD_Name.png` (e.g., `Dr_Smith.png`, `Dr.Smith.png`)
+   - Save as `Principal_Name.png` (e.g., `Principal_Johnson.png`)
+   - Name matching is flexible (spaces and dots are ignored)
 
-```bash
-# 1. Prepare data in Excel
-# 2. Set up template
+2. **Place in correct folders:**
+   - HOD signatures → `hod_signatures/` folder
+   - Principal signatures → `principal_signatures/` folder
 
-# 3. Install dependencies
-pip install -r requirements.txt
+3. **If signatures are not found:**
+   - Script will continue and skip the signature (no errors)
+   - You'll see a warning: `[WARNING] Signature NOT FOUND for Dr. Smith`
 
-# 4. Generate certificates
-python generate_certificates.py
+## ⚙️ Customization
 
-# 5. Find your certificates in the output folder
-```
-
-## ⚙️ Configuration Example
+### Adjust Text Positions
+Edit these constants in `autocirtificate.py` (in pixels):
 
 ```python
-config = {
-    'template_path': './templates/certificate_template.png',
-    'data_file': './data/recipients.xlsx',
-    'output_directory': './output/',
-    'sheet_name': 'Sheet1',
-    'field_mappings': {
-        'Name': 'recipient_name',
-        'Course': 'course_name',
-        'Date': 'completion_date'
-    }
-}
+NAME_POS = (1000, 750)              # Student name position
+CONTENT_POS = (1000, 915)           # Certificate content position
+HOD_POS = (600, 1260)               # HOD name position
+PRINCIPAL_POS = (1400, 1260)        # Principal name position
+HOD_SIGN_POS = (500, 1050)          # HOD signature position
+PRINCIPAL_SIGN_POS = (1300, 1050)   # Principal signature position
 ```
+
+### Adjust Font Sizes
+```python
+name_font = load_font("arial.ttf", 120)      # Student name (120pt)
+content_font = load_font("arial.ttf", 45)    # Certificate text (45pt)
+label_font = load_font("arial.ttf", 48)      # Official names (48pt)
+```
+
+### Modify Certificate Content
+Edit the `auto_content()` function to customize the default messages for each achievement type.
 
 ## 🐛 Troubleshooting
 
-- **Excel file not found**: Ensure the file path is correct and the file exists
-- **Template issues**: Verify the template image path and format
-- **Permission errors**: Check write permissions for the output directory
+| Problem | Solution |
+|---------|----------|
+| **"StudentData.xlsx not found"** | Ensure the Excel file is in the same directory as the script |
+| **"Missing column: Student Name"** | Check that Excel column names match exactly (case-sensitive) |
+| **"template_C1.jpg not found"** | Ensure the template image is in the same directory |
+| **Fonts not loading** | Script will use default font automatically - no action needed |
+| **Signatures not appearing** | Check file names in signature folders and ensure they match the names in Excel |
+| **Permission denied** | Ensure write permissions for the `certificates/` folder |
+
+## 📊 Output
+
+Generated certificates are saved in the `certificates/` folder with names like:
+- `John_Doe.png`
+- `Jane_Smith.png`
+- `Alex_Kumar.png`
+
+## 📦 Dependencies
+
+| Package | Purpose |
+|---------|---------|
+| **Pillow (PIL)** | Image processing and certificate generation |
+| **pandas** | Excel file reading and data manipulation |
+| **openpyxl** | Excel format support for pandas |
+
+See `requirements.txt` for specific versions.
+
+## 🔍 Example Workflow
+
+```bash
+# 1. Prepare your data
+# - Create StudentData.xlsx with student information
+# - Add signature PNG files to hod_signatures/ and principal_signatures/
+
+# 2. Install dependencies
+pip install -r requirements.txt
+
+# 3. Customize (optional)
+# - Edit positions, fonts, or content in autocirtificate.py
+# - Update certificate template if needed
+
+# 4. Generate certificates
+python autocirtificate.py
+
+# Output:
+# [1/5] Loading Excel data...
+# [✓] Loaded 50 records from StudentData.xlsx
+# [2/5] Validating files and columns...
+# [5/5] Generating certificates...
+#   [1/50] ✓ Generated: John_Doe.png
+#   [2/50] ✓ Generated: Jane_Smith.png
+#   ...
+# ✓ CERTIFICATES GENERATED: 50/50
+
+# 5. Find your certificates in the certificates/ folder
+```
+
+## 🎨 Creating a Custom Template
+
+1. Create a certificate design in any image editor (Photoshop, Canva, GIMP, etc.)
+2. Export as JPG or PNG
+3. Replace `template_C1.jpg` with your template
+4. Adjust position constants in the code to match your template layout
+5. Re-run the script with your data
+
+## ⚡ Tips & Best Practices
+
+- ✅ Use high-resolution templates (1400+ pixels) for print-quality certificates
+- ✅ Keep signature images at 350x150px or larger for best results
+- ✅ Use PNG for signatures (transparency is preserved)
+- ✅ Test with 2-3 records first before bulk generation
+- ✅ Maintain consistent naming for signatures (e.g., always use first and last name)
+- ✅ Back up your template and data files
+
+## 🚦 Performance
+
+- Generates ~50 certificates per minute on average hardware
+- Speed depends on template size and number of signatures
+- No real-time optimization needed for <1000 certificates
 
 ## 📄 License
 
-This project is open source and available under the MIT License.
+This project is open source and available under the **MIT License**. See LICENSE file for details.
 
 ## 🤝 Contributing
 
-Contributions are welcome! Feel free to:
-
-- Report bugs
+Contributions are welcome! You can:
+- Report bugs via GitHub Issues
 - Suggest improvements
 - Submit pull requests
-- Share ideas for new features
+- Share feedback and ideas
 
-## 📞 Support
+## 💬 Support & Questions
 
-For issues, questions, or suggestions, please create an issue on the GitHub repository.
+For issues, questions, or feature requests:
+1. Check the Troubleshooting section above
+2. Create a GitHub Issue with details
+3. Provide your Excel structure and error messages
 
 ---
 
 **Author**: [shaktimaann](https://github.com/shaktimaann)
 
 **Last Updated**: 2026-04-27
+
+**Status**: Active & Maintained ✓
